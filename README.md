@@ -48,8 +48,9 @@
 **결과**
 
 <img width="500" alt="image" src="https://github.com/user-attachments/assets/73249dcd-843f-4260-a6d0-31d8099e871d">
+<img src="https://github.com/user-attachments/assets/c3f03ba5-5962-4318-8bdc-a24448f1e28c" width="500">
 
-맥북에서 LG노트북에 가상화된 Locky Linux로 플러터웹 전송완료!
+- 맥북에서 LG노트북에 가상화된 Locky Linux로 플러터웹 이더넷에 배포 완료!
 
 
 
