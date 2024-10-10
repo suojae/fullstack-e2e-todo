@@ -45,7 +45,11 @@
 
 
 
+**결과**
 
+<img width="500" alt="image" src="https://github.com/user-attachments/assets/73249dcd-843f-4260-a6d0-31d8099e871d">
+
+맥북에서 LG노트북에 가상화된 Locky Linux로 플러터웹 전송완료!
 
 
 
