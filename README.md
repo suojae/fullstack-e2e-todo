@@ -13,6 +13,11 @@
    - Node.js 기반의 REST API 서버가 To-Do 데이터를 관리
    - 방화벽을 설정하여 외부 접근을 차단하고 내부 사용자 간 안전한 데이터 공유를 보장
    - To-Do 데이터는 MariaDB에 저장되고, 사용자 간 동기화
+     
+3. **시퀀스 다이어그램**
+
+   
+![image](https://github.com/user-attachments/assets/7f157cbe-77ed-4886-bab4-cbcbf7e8937d)
 
 
 ## 백엔드 - Nodejs
