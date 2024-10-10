@@ -2,7 +2,7 @@
 
 <br/>
 
-## 인프라 - Oracle VM에서 가상화한 Rocky Linux로 Ethernet 연결 간 To-Do 공유
+## 인프라 - Oracle VirtualBox에서 가상화한 Rocky Linux로 Ethernet 연결 간 To-Do 공유
 
 ### **Rocky Linux 가상화 이유**
 
