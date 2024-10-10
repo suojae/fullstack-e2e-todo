@@ -35,7 +35,7 @@
 
 ### 다이어그램
 
-<img src="https://github.com/user-attachments/assets/83f34fef-e168-4281-92ca-f0e004f97230" width="500">
+<img src="https://github.com/user-attachments/assets/f242f065-b3b8-400c-8585-da1ca024d24b" width="500">
 
 
    
