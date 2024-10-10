@@ -31,16 +31,24 @@
 
 <br/>
 
-### **시퀀스 다이어그램**
+
+
+### 다이어그램
+
+<img src="https://github.com/user-attachments/assets/83f34fef-e168-4281-92ca-f0e004f97230" width="500">
+
 
    
-![image](https://github.com/user-attachments/assets/531bb832-f629-47bd-bb9a-d0a52e2a07d0)
+<img src="https://github.com/user-attachments/assets/531bb832-f629-47bd-bb9a-d0a52e2a07d0" width="500">
 
 
+<br/>
 <br/>
 
 ## 백엔드 - Nodejs
 
 <br/>
+<br/>
+
 
 ## 프론트 - Flutter Web
