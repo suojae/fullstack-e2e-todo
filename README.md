@@ -1,5 +1,7 @@
 # 프론트-백엔드-인프라 구축까지 E2E 미니 프로젝트
 
+<br/>
+<br/>
 
 ## 인프라 - Oracle VM에서 가상화한 Rocky Linux로 Ethernet 연결 간 To-Do 공유
 
@@ -17,9 +19,13 @@
 3. **시퀀스 다이어그램**
 
    
-![image](https://github.com/user-attachments/assets/7f157cbe-77ed-4886-bab4-cbcbf7e8937d)
+![image](https://github.com/user-attachments/assets/531bb832-f629-47bd-bb9a-d0a52e2a07d0)
 
+
+<br/>
 
 ## 백엔드 - Nodejs
 
-## 프론트 - Flutter
+<br/>
+
+## 프론트 - Flutter Web
