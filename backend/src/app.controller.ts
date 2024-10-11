@@ -1,12 +1,17 @@
-import { Controller, Get } from '@nestjs/common';
-import { AppService } from './app.service';
+import { Controller, Get, Post } from '@nestjs/common';
+import { CounterService } from './app.service';
 
-@Controller()
-export class AppController {
-  constructor(private readonly appService: AppService) {}
+@Controller('counter')
+export class CounterController {
+  constructor(private readonly counterService: CounterService) {}
 
   @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  async getCounter(): Promise<number> {
+    return this.counterService.getCounter();
+  }
+
+  @Post('increment')
+  async incrementCounter(): Promise<number> {
+    return this.counterService.incrementCounter();
   }
 }
