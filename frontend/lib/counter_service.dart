@@ -29,5 +29,20 @@ class CounterService {
     });
   }
 
-// Rest of your code...
+  Future<int> getCounter() async {
+    final response = await http.get(Uri.parse('$baseUrl/counter'));
+    if (response.statusCode == 200) {
+      final value = json.decode(response.body);
+      return value as int;
+    } else {
+      throw Exception('Failed to load counter');
+    }
+  }
+
+  Future<void> incrementCounter() async {
+    final response = await http.post(Uri.parse('$baseUrl/counter/increment'));
+    if (response.statusCode != 200 && response.statusCode != 201) {
+      throw Exception('Failed to increment counter');
+    }
+  }
 }
