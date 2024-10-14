@@ -33,7 +33,8 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: 'stable'
+          flutter-version: '3.3.0'  # 명확한 Flutter 버전 지정
+          channel: 'stable'         # stable 채널 명시
 
       - name: Install Flutter dependencies
         run: |
