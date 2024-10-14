@@ -29,12 +29,11 @@ jobs:
           cd backend
           npm test --passWithNoTests  # 테스트 코드가 없어도 통과
 
-      # Flutter Web 프론트엔드 설정 (Flutter 3.5.3 버전으로 변경)
+      # Flutter Web 프론트엔드 설정 (Flutter stable 버전)
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.5.3'  # 프로젝트에서 요구하는 Flutter 버전 명시
-          channel: 'stable'
+          flutter-version: 'stable'  # 특정 버전 대신 stable 채널 사용
 
       - name: Install Flutter dependencies
         run: |
