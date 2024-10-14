@@ -12,8 +12,31 @@
 - To-Do 데이터는 MariaDB에 저장되고, 사용자 간 동기화
 
 <br/>
+<br/>
 
-### **트러블슈팅 01 - 보안 강화를 위한 비대칭키(공개키 기반 인증)로 SSH 연결 설정**
+
+### 다이어그램
+
+<img src="https://github.com/user-attachments/assets/f242f065-b3b8-400c-8585-da1ca024d24b" width="400">
+
+
+   
+<img src="https://github.com/user-attachments/assets/531bb832-f629-47bd-bb9a-d0a52e2a07d0" width="500">
+
+<br/>
+
+### CICD 구조
+
+<img src="https://github.com/user-attachments/assets/5e4cface-8fd4-4856-82d2-32e8e23fe3d3" width="250">
+
+<br/>
+<br/>
+<br/>
+
+<details>
+<summary> 트러블슈팅 01 - 보안 강화를 위한 비대칭키(공개키 기반 인증)로 SSH 연결 설정 </summary>
+
+<br/>
 
 **문제:**
 
@@ -42,6 +65,7 @@
 
 - 공개키가 성공적으로 등록된 후, 비밀번호 없이 SSH 접속이 가능해졌고, 이를 통해 보안이 강화된 상태에서 서버(LG노트북에 가상화해둔 locky linux)에 접근 가능하게 됨.
 
+<br/>
 
 
 
@@ -53,20 +77,7 @@
 - 맥북에서 LG노트북에 가상화된 Locky Linux로 플러터웹 이더넷에 배포 완료!
 
 
-
-
-
-<br/>
-
-
-### 다이어그램
-
-<img src="https://github.com/user-attachments/assets/f242f065-b3b8-400c-8585-da1ca024d24b" width="500">
-
-
-   
-<img src="https://github.com/user-attachments/assets/531bb832-f629-47bd-bb9a-d0a52e2a07d0" width="500">
-
+</details> <br/>
 
 <br/>
 <br/>
