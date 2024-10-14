@@ -30,38 +30,6 @@ jobs:
           cd backend
           npm test --passWithNoTests  # 테스트 코드가 없어도 통과
 
-      # Flutter 프론트엔드 웹 및 APK 설정
-      - name: Set up Java for Flutter
-        uses: actions/setup-java@v1
-        with:
-          java-version: '12.x'
-
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v1
-        with:
-          flutter-version: 'stable'  # Flutter 안정화 채널 사용
-
-      - name: Install Flutter dependencies
-        run: |
-          cd frontend
-          flutter pub get
-
-      - name: Build Flutter web app
-        run: |
-          cd frontend
-          flutter build web
-
-      - name: Build Flutter APK
-        run: |
-          cd frontend
-          flutter build apk --debug --split-per-abi
-
-      # Flutter APK 릴리즈
-      - name: Push APK to Releases
-        uses: ncipollo/release-action@v1
-        with:
-          artifacts: "frontend/build/app/outputs/apk/debug/*.apk"
-          token: ${{ secrets.TOKEN }}
 
       # Rocky Linux로 배포 (백엔드 + 프론트엔드 웹)
       - name: Deploy to Rocky Linux
@@ -73,12 +41,6 @@ jobs:
             npm install
             npm run build
             pm2 restart all
-
-            # Flutter Web 프론트엔드 배포
-            cd /home/suojae/Users/jayoengchoi/WebstormProjects/fullstack-todo/frontend
-            rm -rf /var/www/html/*
-            cp -r build/web/* /var/www/html/
-            systemctl restart nginx
           EOF
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
