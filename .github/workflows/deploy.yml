@@ -1,4 +1,4 @@
-name: CI/CD to Rocky Linux
+name: CI/CD for Backend (Node.js) and Frontend (Flutter Web)
 
 on:
   push:
@@ -13,29 +13,54 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      # Backend Node.js 설정
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
           node-version: '20'
 
-      - name: Install dependencies
+      - name: Install backend dependencies
         run: |
-          cd Users/jayoengchoi/WebstormProjects/fullstack-todo/backend  # backend 경로로 이동
+          cd backend  # Node.js 백엔드 경로
           npm install
 
-      - name: Run tests
+      - name: Run backend tests
         run: |
-          cd Users/jayoengchoi/WebstormProjects/fullstack-todo/backend  # 경로 이동 후 테스트 실행
+          cd backend
           npm test
 
-      - name: Build and deploy to Rocky Linux
+      # Flutter Web 프론트엔드 설정
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 'stable'
+
+      - name: Install Flutter dependencies
         run: |
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa user@192.168.10.120 << 'EOF'
+          cd frontend  # Flutter 프로젝트 경로로 이동
+          flutter pub get
+
+      - name: Build Flutter web app
+        run: |
+          cd frontend
+          flutter build web  # Flutter Web 빌드
+
+      # Rocky Linux 서버로 배포 (백엔드 + 프론트엔드)
+      - name: Deploy to Rocky Linux
+        run: |
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa suojae@192.168.10.120 << 'EOF'
+            # 백엔드 배포
             cd /home/suojae/Users/jayoengchoi/WebstormProjects/fullstack-todo/backend
             git pull origin main
             npm install
             npm run build
             pm2 restart all
+
+            # Flutter Web 프론트엔드 배포
+            cd /home/suojae/Users/jayoengchoi/WebstormProjects/fullstack-todo/frontend
+            rm -rf /var/www/html/*  # 기존 NGINX 파일 삭제
+            cp -r build/web/* /var/www/html/  # 새로운 Flutter Web 빌드 결과 복사
+            systemctl restart nginx  # NGINX 재시작
           EOF
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
