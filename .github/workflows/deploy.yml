@@ -1,0 +1,37 @@
+name: CI/CD to Rocky Linux
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build and deploy to Rocky Linux
+        run: |
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa user@192.168.10.120 << 'EOF'
+            cd /path/to/your/project
+            git pull origin main
+            npm install
+            npm run build
+            pm2 restart all
+          EOF
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
