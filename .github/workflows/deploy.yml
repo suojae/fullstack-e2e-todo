@@ -27,23 +27,31 @@ jobs:
       - name: Run backend tests
         run: |
           cd backend
-          npm test --passWithNoTests  # 테스트 코드가 없어도 통과
+          npm test --passWithNoTests
 
-      # Flutter Web 프론트엔드 설정 (Flutter stable 버전)
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: 'stable'  # 특정 버전 대신 stable 채널 사용
+      # Flutter SDK 직접 설치
+      - name: Install Flutter SDK
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y curl git unzip xz-utils zip libglu1-mesa
+          curl -o flutter.tar.xz https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.5.3-stable.tar.xz
+          tar xf flutter.tar.xz
+          export PATH="$PATH:`pwd`/flutter/bin"
+          flutter --version
 
       - name: Install Flutter dependencies
         run: |
           cd frontend
           flutter pub get
+        env:
+          PATH: ${{ runner.workspace }}/flutter/bin:$PATH
 
       - name: Build Flutter web app
         run: |
           cd frontend
           flutter build web
+        env:
+          PATH: ${{ runner.workspace }}/flutter/bin:$PATH
 
       # Rocky Linux로 배포
       - name: Deploy to Rocky Linux
