@@ -1,4 +1,4 @@
-name: CI/CD for Backend (Node.js) and Frontend (Flutter Web)
+name: CI/CD for Backend (Node.js) and Frontend (Flutter Web & APK)
 
 on:
   push:
@@ -10,8 +10,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Checkout repository
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v1
 
       # Backend Node.js 설정
       - name: Set up Node.js
@@ -27,33 +28,42 @@ jobs:
       - name: Run backend tests
         run: |
           cd backend
-          npm test --passWithNoTests
+          npm test --passWithNoTests  # 테스트 코드가 없어도 통과
 
-      # Flutter SDK 직접 설치
-      - name: Install Flutter SDK
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y curl git unzip xz-utils zip libglu1-mesa
-          curl -o flutter_linux_3.5.3-stable.tar.xz https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.5.3-stable.tar.xz
-          tar xf flutter_linux_3.5.3-stable.tar.xz
-          export PATH="$PATH:`pwd`/flutter/bin"
-          flutter --version
+      # Flutter 프론트엔드 웹 및 APK 설정
+      - name: Set up Java for Flutter
+        uses: actions/setup-java@v1
+        with:
+          java-version: '12.x'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v1
+        with:
+          flutter-version: '3.5.3'
 
       - name: Install Flutter dependencies
         run: |
           cd frontend
           flutter pub get
-        env:
-          PATH: ${{ runner.workspace }}/flutter/bin:$PATH
 
       - name: Build Flutter web app
         run: |
           cd frontend
           flutter build web
-        env:
-          PATH: ${{ runner.workspace }}/flutter/bin:$PATH
 
-      # Rocky Linux로 배포
+      - name: Build Flutter APK
+        run: |
+          cd frontend
+          flutter build apk --debug --split-per-abi
+
+      # Flutter APK 릴리즈
+      - name: Push APK to Releases
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "frontend/build/app/outputs/apk/debug/*.apk"
+          token: ${{ secrets.TOKEN }}
+
+      # Rocky Linux로 배포 (백엔드 + 프론트엔드 웹)
       - name: Deploy to Rocky Linux
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa suojae@192.168.10.120 << 'EOF'
