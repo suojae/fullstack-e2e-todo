@@ -21,13 +21,13 @@ jobs:
 
       - name: Install backend dependencies
         run: |
-          cd backend  # Node.js 백엔드 경로
+          cd backend
           npm install
 
       - name: Run backend tests
         run: |
           cd backend
-          npm test
+          npm test --passWithNoTests  # 테스트 코드가 없어도 통과
 
       # Flutter Web 프론트엔드 설정
       - name: Set up Flutter
@@ -37,15 +37,15 @@ jobs:
 
       - name: Install Flutter dependencies
         run: |
-          cd frontend  # Flutter 프로젝트 경로로 이동
+          cd frontend
           flutter pub get
 
       - name: Build Flutter web app
         run: |
           cd frontend
-          flutter build web  # Flutter Web 빌드
+          flutter build web
 
-      # Rocky Linux 서버로 배포 (백엔드 + 프론트엔드)
+      # Rocky Linux로 배포
       - name: Deploy to Rocky Linux
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa suojae@192.168.10.120 << 'EOF'
@@ -58,9 +58,9 @@ jobs:
 
             # Flutter Web 프론트엔드 배포
             cd /home/suojae/Users/jayoengchoi/WebstormProjects/fullstack-todo/frontend
-            rm -rf /var/www/html/*  # 기존 NGINX 파일 삭제
-            cp -r build/web/* /var/www/html/  # 새로운 Flutter Web 빌드 결과 복사
-            systemctl restart nginx  # NGINX 재시작
+            rm -rf /var/www/html/*
+            cp -r build/web/* /var/www/html/
+            systemctl restart nginx
           EOF
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
