@@ -39,7 +39,7 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v1
         with:
-          flutter-version: '3.5.3'
+          flutter-version: 'stable'  # Flutter 안정화 채널 사용
 
       - name: Install Flutter dependencies
         run: |
