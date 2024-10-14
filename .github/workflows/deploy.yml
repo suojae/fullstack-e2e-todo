@@ -19,15 +19,19 @@ jobs:
           node-version: '20'
 
       - name: Install dependencies
-        run: npm install
+        run: |
+          cd Users/jayoengchoi/WebstormProjects/fullstack-todo/backend  # backend 경로로 이동
+          npm install
 
       - name: Run tests
-        run: npm test
+        run: |
+          cd Users/jayoengchoi/WebstormProjects/fullstack-todo/backend  # 경로 이동 후 테스트 실행
+          npm test
 
       - name: Build and deploy to Rocky Linux
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa user@192.168.10.120 << 'EOF'
-            cd /path/to/your/project
+            cd /home/suojae/Users/jayoengchoi/WebstormProjects/fullstack-todo/backend
             git pull origin main
             npm install
             npm run build
