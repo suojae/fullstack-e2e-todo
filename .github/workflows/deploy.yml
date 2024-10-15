@@ -25,4 +25,3 @@ jobs:
             npm install
             pm2 describe fullstack-e2e-todo || pm2 start dist/main.js --name "fullstack-e2e-todo"
             pm2 restart fullstack-e2e-todo
-            sudo systemctl restart nginx
