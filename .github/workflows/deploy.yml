@@ -10,6 +10,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.3'  # 사용할 Flutter 버전을 지정
+
       - name: Checkout code
         uses: actions/checkout@v2
 
