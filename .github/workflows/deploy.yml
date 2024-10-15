@@ -10,21 +10,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-
+      # 1. Flutter 설치
       - name: Install Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.24.3'  # 사용할 Flutter 버전을 지정
+          flutter-version: '3.24.3'
 
+      # 2. 코드 체크아웃
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Flutter 웹 앱 빌드
+      # 3. Flutter 웹 앱 빌드
       - name: Build Flutter Web
         run: flutter build web
         working-directory: frontend
 
-      # Flutter 웹 앱 배포
+      # 4. 빌드된 파일을 tar로 압축
+      - name: Compress Build Files
+        run: tar -czvf flutter_build.tar.gz -C frontend/build/web .
+
+      # 5. tar 파일을 SCP로 전송
       - name: Deploy Flutter Web to Rocky Linux via SCP
         uses: appleboy/scp-action@v0.1.0
         with:
@@ -32,20 +37,22 @@ jobs:
           username: ${{ secrets.LG_USER }}
           key: ${{ secrets.LG_SSH_KEY }}
           port: ${{ secrets.REMOTE_SSH_PORT }}
-          source: "frontend/build/web/*"
-          target: "/usr/share/nginx/html"
+          source: "flutter_build.tar.gz"
+          target: "/home/suojae/deploy"
           timeout: 120s
           command_timeout: 20m
           debug: true
 
-      # NGINX 재시작
-      - name: Restart NGINX
+      # 6. 서버에서 압축 해제 후 NGINX 경로로 복사
+      - name: Extract and Deploy on Rocky Linux
         uses: appleboy/ssh-action@v0.1.0
         with:
           host: ${{ secrets.LG_HOST }}
           username: ${{ secrets.LG_USER }}
           key: ${{ secrets.LG_SSH_KEY }}
-          script: sudo systemctl restart nginx
+          script: |
+            tar -xzvf /home/suojae/deploy/flutter_build.tar.gz -C /usr/share/nginx/html
+            sudo systemctl restart nginx
           timeout: 120s
           command_timeout: 20m
           debug: true
