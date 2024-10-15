@@ -47,7 +47,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Counter Sync without Socket',
+      title: 'CICD 테스트중 깃헙액션깃헙액션',
       home: Scaffold(
         appBar: AppBar(title: Text('Counter Sync without Socket')),
         body: Center(
