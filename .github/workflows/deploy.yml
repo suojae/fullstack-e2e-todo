@@ -16,17 +16,25 @@ jobs:
         with:
           flutter-version: '3.0.0'  # 사용할 Flutter 버전을 지정
 
-      # 2. 의존성 설치 (Flutter pub get)
+      # 2. 코드 체크아웃
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # 3. 디렉토리 구조 확인 (선택 사항)
+      - name: Check Directory Structure
+        run: ls -R
+
+      # 4. 의존성 설치 (Flutter pub get)
       - name: Install dependencies
         run: flutter pub get
-        working-directory: frontend  # frontend 디렉토리에서 실행
+        working-directory: frontend  # 정확한 경로를 지정
 
-      # 3. Flutter 웹 앱 빌드
+      # 5. Flutter 웹 앱 빌드
       - name: Build Flutter Web
         run: flutter build web
-        working-directory: frontend  # frontend 디렉토리에서 실행
+        working-directory: frontend  # 정확한 경로를 지정
 
-      # 4. Flutter 웹 앱 빌드 결과물을 Rocky Linux로 복사
+      # 6. Flutter 웹 앱 빌드 결과물을 Rocky Linux로 복사
       - name: Deploy Flutter Web to Rocky Linux via SCP
         uses: appleboy/scp-action@v0.1.0
         with:
@@ -36,7 +44,7 @@ jobs:
           source: "frontend/build/web/*"
           target: "/usr/share/nginx/html"
 
-      # 5. 백엔드 배포
+      # 7. 백엔드 배포
       - name: Deploy to Rocky Linux via SSH
         uses: appleboy/ssh-action@v0.1.0
         with:
