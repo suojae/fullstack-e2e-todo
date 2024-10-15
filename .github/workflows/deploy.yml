@@ -17,7 +17,7 @@ jobs:
         uses: appleboy/ssh-action@v0.1.0
         with:
           host: ${{ secrets.LG_HOST }}
-          username: ${{ secrets.LG_USER }}
+          username: ${{ secrets.LG_USER }} 
           key: ${{ secrets.LG_SSH_KEY }}
           script: |
             cd /home/suojae/Users/jayoengchoi/WebstormProjects/fullstack-todo/backend
@@ -25,3 +25,4 @@ jobs:
             npm install
             pm2 describe fullstack-e2e-todo || pm2 start dist/main.js --name "fullstack-e2e-todo"
             pm2 restart fullstack-e2e-todo
+            sudo systemctl restart nginx
