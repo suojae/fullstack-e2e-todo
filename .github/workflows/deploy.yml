@@ -6,18 +6,36 @@ on:
       - main  # main 브랜치에 푸시할 때만 실행
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
+      # 1. 코드 체크아웃
       - name: Checkout code
         uses: actions/checkout@v2
 
+      # 2. Flutter 웹 앱 빌드 (로컬 환경에서 빌드)
+      - name: Build Flutter Web
+        run: |
+          cd frontend
+          flutter build web
+
+      # 3. Flutter 웹 앱 빌드 결과물을 Rocky Linux에 복사
+      - name: Deploy Flutter Web to Rocky Linux via SSH
+        uses: appleboy/scp-action@v0.1.0
+        with:
+          host: ${{ secrets.LG_HOST }}
+          username: ${{ secrets.LG_USER }}
+          key: ${{ secrets.LG_SSH_KEY }}
+          source: "frontend/build/web/*"
+          target: "/usr/share/nginx/html"
+
+      # 4. 백엔드 배포
       - name: Deploy to Rocky Linux via SSH
         uses: appleboy/ssh-action@v0.1.0
         with:
           host: ${{ secrets.LG_HOST }}
-          username: ${{ secrets.LG_USER }} 
+          username: ${{ secrets.LG_USER }}
           key: ${{ secrets.LG_SSH_KEY }}
           script: |
             cd /home/suojae/Users/jayoengchoi/WebstormProjects/fullstack-todo/backend
@@ -25,4 +43,4 @@ jobs:
             npm install
             pm2 describe fullstack-e2e-todo || pm2 start dist/main.js --name "fullstack-e2e-todo"
             pm2 restart fullstack-e2e-todo
-            
+            sudo systemctl restart nginx
