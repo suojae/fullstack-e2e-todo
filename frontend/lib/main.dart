@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'counter_service.dart';
 
 void main() => runApp(MyApp());
@@ -13,32 +12,11 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   final CounterService _counterService = CounterService();
   final StreamController<int> _counterController = StreamController<int>();
-  late IO.Socket _socket;
 
   @override
   void initState() {
     super.initState();
-    _connectSocket();
     _loadInitialCounter();
-  }
-
-  void _connectSocket() {
-    _socket = IO.io('http://192.168.10.120:3000', <String, dynamic>{
-      'transports': ['websocket'],
-    });
-
-    _socket.on('connect', (_) {
-      print('Connected to WebSocket server');
-    });
-
-    _socket.on('counterUpdated', (data) {
-      print('Counter updated: $data');
-      _counterController.add(data as int);
-    });
-
-    _socket.on('disconnect', (_) {
-      print('Disconnected from WebSocket server');
-    });
   }
 
   Future<void> _loadInitialCounter() async {
@@ -53,7 +31,8 @@ class _MyAppState extends State<MyApp> {
   Future<void> _incrementCounter() async {
     try {
       await _counterService.incrementCounter();
-      // The counter will update via WebSocket
+      final updatedCounter = await _counterService.getCounter();
+      _counterController.add(updatedCounter);
     } catch (e) {
       _counterController.addError('Failed to increment counter: $e');
     }
@@ -61,7 +40,6 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void dispose() {
-    _socket.disconnect();
     _counterController.close();
     super.dispose();
   }
@@ -69,9 +47,9 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Counter Sync with Stream',
+      title: 'Counter Sync without Socket',
       home: Scaffold(
-        appBar: AppBar(title: Text('Counter Sync with Stream')),
+        appBar: AppBar(title: Text('Counter Sync without Socket')),
         body: Center(
           child: StreamBuilder<int>(
             stream: _counterController.stream,
