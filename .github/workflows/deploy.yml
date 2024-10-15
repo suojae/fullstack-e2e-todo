@@ -14,7 +14,7 @@ jobs:
       - name: Install Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.24.3'  # 사용할 Flutter 버전을 지정
+          flutter-version: 'stable'
 
       # 2. 코드 체크아웃
       - name: Checkout code
@@ -34,6 +34,9 @@ jobs:
           key: ${{ secrets.LG_SSH_KEY }}  # SSH 프라이빗 키
           source: "frontend/build/web/*"
           target: "/usr/share/nginx/html"
+          timeout: 120s  # 타임아웃 시간 증가
+          command_timeout: 20m  # 명령 실행 시간 증가
+          debug: true  # 디버그 모드 활성화
 
       # 5. NGINX 서버 재시작
       - name: Restart NGINX
@@ -43,3 +46,6 @@ jobs:
           username: ${{ secrets.LG_USER }}
           key: ${{ secrets.LG_SSH_KEY }}
           script: sudo systemctl restart nginx
+          timeout: 120s  # 타임아웃 시간 증가
+          command_timeout: 20m  # 명령 실행 시간 증가
+          debug: true  # 디버그 모드 활성화
