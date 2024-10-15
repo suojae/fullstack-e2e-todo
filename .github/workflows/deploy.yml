@@ -14,51 +14,32 @@ jobs:
       - name: Install Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.24.3'  # 사용할 Flutter 버전을 지정
+          flutter-version: 'stable'
 
       # 2. 코드 체크아웃
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # 3. 디렉토리 구조 확인 (선택 사항)
-      - name: Check Directory Structure
-        run: ls -R
-
-      # 4. 의존성 설치 (Flutter pub get)
-      - name: Install dependencies
-        run: flutter pub get
-        working-directory: frontend  # 정확한 경로를 지정
-
-      # 5. Flutter 웹 앱 빌드
+      # 3. Flutter 웹 앱 빌드
       - name: Build Flutter Web
         run: flutter build web
-        working-directory: frontend  # 정확한 경로를 지정
+        working-directory: frontend  # frontend 디렉토리에서 실행
 
-      # 6. Flutter 웹 앱 빌드 결과물을 Rocky Linux로 복사
+      # 4. Flutter 웹 앱 빌드 결과물을 Rocky Linux로 복사
       - name: Deploy Flutter Web to Rocky Linux via SCP
         uses: appleboy/scp-action@v0.1.0
+        with:
+          host: ${{ secrets.LG_HOST }}  # GitHub Secrets에 설정한 IP
+          username: ${{ secrets.LG_USER }}  # SSH 접속 사용자 이름
+          key: ${{ secrets.LG_SSH_KEY }}  # SSH 프라이빗 키
+          source: "frontend/build/web/*"
+          target: "/usr/share/nginx/html"
+
+      # 5. NGINX 서버 재시작
+      - name: Restart NGINX
+        uses: appleboy/ssh-action@v0.1.0
         with:
           host: ${{ secrets.LG_HOST }}
           username: ${{ secrets.LG_USER }}
           key: ${{ secrets.LG_SSH_KEY }}
-          source: "frontend/build/web/*"
-          target: "/usr/share/nginx/html"
-          timeout: 60s  # 타임아웃 60초로 설정
-          command_timeout: 20m  # 명령 타임아웃 20분으로 설정
-
-      # 7. 백엔드 배포
-      - name: Deploy to Rocky Linux via SSH
-        uses: appleboy/ssh-action@v0.1.0
-        with:
-          host: ${{ secrets.LG_HOST }}
-          username: ${{ secrets.LG_USER }} 
-          key: ${{ secrets.LG_SSH_KEY }}
-          script: |
-            cd /home/suojae/Users/jayoengchoi/WebstormProjects/fullstack-todo/backend
-            git pull origin main
-            npm install
-            pm2 describe fullstack-e2e-todo || pm2 start dist/main.js --name "fullstack-e2e-todo"
-            pm2 restart fullstack-e2e-todo
-            sudo systemctl restart nginx
-          timeout: 60s  # SSH 타임아웃 60초로 설정
-          command_timeout: 20m  # 명령 타임아웃 20분으로 설정
+          script: sudo systemctl restart nginx
