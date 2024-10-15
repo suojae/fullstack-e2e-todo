@@ -20,8 +20,9 @@ jobs:
           username: ${{ secrets.LG_USER }}
           key: ${{ secrets.LG_SSH_KEY }}
           script: |
-            cd /path/to/project/on/rocky-linux
+            cd /home/suojae/Users/jayoengchoi/WebstormProjects/fullstack-todo/backend
             git pull origin main
             npm install
-            pm2 restart all
+            pm2 describe fullstack-e2e-todo || pm2 start dist/main.js --name "fullstack-e2e-todo"
+            pm2 restart fullstack-e2e-todo
             sudo systemctl restart nginx
