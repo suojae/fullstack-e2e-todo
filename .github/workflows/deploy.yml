@@ -31,6 +31,7 @@ jobs:
           host: ${{ secrets.LG_HOST }}
           username: ${{ secrets.LG_USER }}
           key: ${{ secrets.LG_SSH_KEY }}
+          port: ${{ secrets.REMOTE_SSH_PORT }}
           source: "frontend/build/web/*"
           target: "/usr/share/nginx/html"
           timeout: 120s
