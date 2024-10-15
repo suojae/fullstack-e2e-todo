@@ -43,6 +43,8 @@ jobs:
           key: ${{ secrets.LG_SSH_KEY }}
           source: "frontend/build/web/*"
           target: "/usr/share/nginx/html"
+          timeout: 60s  # 타임아웃 60초로 설정
+          command_timeout: 20m  # 명령 타임아웃 20분으로 설정
 
       # 7. 백엔드 배포
       - name: Deploy to Rocky Linux via SSH
@@ -58,3 +60,5 @@ jobs:
             pm2 describe fullstack-e2e-todo || pm2 start dist/main.js --name "fullstack-e2e-todo"
             pm2 restart fullstack-e2e-todo
             sudo systemctl restart nginx
+          timeout: 60s  # SSH 타임아웃 60초로 설정
+          command_timeout: 20m  # 명령 타임아웃 20분으로 설정
