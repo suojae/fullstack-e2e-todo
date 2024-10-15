@@ -10,18 +10,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. 코드 체크아웃
-      - name: Checkout code
-        uses: actions/checkout@v2
+      # 1. Flutter 설치
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.0'  # 사용할 Flutter 버전을 지정
 
-      # 2. Flutter 웹 앱 빌드 (로컬 환경에서 빌드)
+      # 2. 의존성 설치 (Flutter pub get)
+      - name: Install dependencies
+        run: flutter pub get
+        working-directory: frontend  # frontend 디렉토리에서 실행
+
+      # 3. Flutter 웹 앱 빌드
       - name: Build Flutter Web
-        run: |
-          cd frontend
-          flutter build web
+        run: flutter build web
+        working-directory: frontend  # frontend 디렉토리에서 실행
 
-      # 3. Flutter 웹 앱 빌드 결과물을 Rocky Linux에 복사
-      - name: Deploy Flutter Web to Rocky Linux via SSH
+      # 4. Flutter 웹 앱 빌드 결과물을 Rocky Linux로 복사
+      - name: Deploy Flutter Web to Rocky Linux via SCP
         uses: appleboy/scp-action@v0.1.0
         with:
           host: ${{ secrets.LG_HOST }}
@@ -30,12 +36,12 @@ jobs:
           source: "frontend/build/web/*"
           target: "/usr/share/nginx/html"
 
-      # 4. 백엔드 배포
+      # 5. 백엔드 배포
       - name: Deploy to Rocky Linux via SSH
         uses: appleboy/ssh-action@v0.1.0
         with:
           host: ${{ secrets.LG_HOST }}
-          username: ${{ secrets.LG_USER }}
+          username: ${{ secrets.LG_USER }} 
           key: ${{ secrets.LG_SSH_KEY }}
           script: |
             cd /home/suojae/Users/jayoengchoi/WebstormProjects/fullstack-todo/backend
