@@ -10,31 +10,27 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Flutter 설치
+      # 1. Flutter 설치 (최신 안정 버전 설치)
       - name: Install Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.0.0'  # 사용할 Flutter 버전을 지정
+          flutter-version: 'stable'  # 최신 안정 버전 설치
 
       # 2. 코드 체크아웃
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # 3. 디렉토리 구조 확인 (선택 사항)
-      - name: Check Directory Structure
-        run: ls -R
-
-      # 4. 의존성 설치 (Flutter pub get)
+      # 3. 의존성 설치 (Flutter pub get)
       - name: Install dependencies
         run: flutter pub get
         working-directory: frontend  # 정확한 경로를 지정
 
-      # 5. Flutter 웹 앱 빌드
+      # 4. Flutter 웹 앱 빌드
       - name: Build Flutter Web
         run: flutter build web
         working-directory: frontend  # 정확한 경로를 지정
 
-      # 6. Flutter 웹 앱 빌드 결과물을 Rocky Linux로 복사
+      # 5. Flutter 웹 앱 빌드 결과물을 Rocky Linux로 복사
       - name: Deploy Flutter Web to Rocky Linux via SCP
         uses: appleboy/scp-action@v0.1.0
         with:
@@ -44,7 +40,7 @@ jobs:
           source: "frontend/build/web/*"
           target: "/usr/share/nginx/html"
 
-      # 7. 백엔드 배포
+      # 6. 백엔드 배포
       - name: Deploy to Rocky Linux via SSH
         uses: appleboy/ssh-action@v0.1.0
         with:
